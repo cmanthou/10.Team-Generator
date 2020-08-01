@@ -9,14 +9,175 @@ const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
 const render = require("./lib/htmlRenderer");
+const { fileURLToPath } = require("url");
 
 
 // Write code to use inquirer to gather information about the development team members,
 // and to create objects for each team member (using the correct classes as blueprints!)
 
+let teamMembers = [];
+var question = {
+    type: "list",
+    message: "Add a team memeber or generate a new team?",
+    name: "Add",
+    choices: ["Add Member", "Generate Team"],
+};
+var role = {
+    type: "list",
+    message: "What role would you like to add?",
+    name: "Role",
+    choices: ["Intern", "Engineer", "Manager"],
+};
+var file = {
+    type: "input",
+    message: "Please enter file name",
+    name: "File",
+};
+var roleQuestions = {
+    Manager: [
+        {
+            type: "input",
+            message: "Please enter your Name",
+            name: "name",
+        },
+        {
+            type: "input",
+            message: "What is your ID Number?",
+            name: "id",
+        },
+        {
+            type: "input",
+            message: "What is your Email?",
+            name: "email",
+        },
+        {
+            type: "input",
+            message: "What is your Office Number?",
+            name: "number",
+        },
+    ],
+    Engineer: [
+        {
+            type: "input",
+            message: "Please enter your Name",
+            name: "name",
+        },
+        {
+            type: "input",
+            message: "What is your ID Number?",
+            name: "id",
+        },
+        {
+            type: "input",
+            message: "What is your Email?",
+            name: "email",
+        },
+        {
+            type: "input",
+            message: "What is your GitHub User Name?",
+            name: "gitHub",
+        },
+    ],
+    Intern: [
+        {
+            type: "input",
+            message: "Please enter your Name",
+            name: "name",
+        },
+        {
+            type: "input",
+            message: "What is your ID Number?",
+            name: "id",
+        },
+        {
+            type: "input",
+            message: "What is your Email?",
+            name: "email",
+        },
+        {
+            type: "input",
+            message: "Which school do you attend?",
+            name: "school",
+        },
+    ],
+};
+
 // After the user has input all employees desired, call the `render` function (required
 // above) and pass in an array containing all employee objects; the `render` function will
 // generate and return a block of HTML including templated divs for each employee!
+
+var startApp = () => {
+    selectRole();
+};
+var addOrFinish = () => {
+    inquirer.prompt(question).then((answer) => {
+        if (answer.Add === "Add Member") {
+            selectRole();
+        } else {
+            getFileName();
+        }
+    });
+};
+var selectRole = () => {
+    inquirer.prompt(role).then((answer) => {
+        console.log(answer);
+        questionsRole(role);
+    });
+};
+var questionsRole = (questions) => {
+    inquirer.prompt(questions).then((answer) => {
+        console.log(answer);
+        let member = {};
+        if (answer.role === "Manager") {
+            member = new Manager(
+                answer.name,
+                answer.id,
+                answer.email,
+                answer.number
+            );
+        } else if (role === "Engineer") {
+            member = new Engineer(
+                answer.name,
+                answer.id,
+                answer.email,
+                answer.gitHub,
+            );
+        } else if (role === "Intern") {
+            member = new Intern(
+                answer.name, 
+                answer.id, 
+                answer.email, 
+                answer.school,
+            );
+        }
+        teamMembers.push(member);
+        addOrFinish();
+    });
+};
+var getFileName = () => {
+    inquirer.prompt(fileNameQuestion).then((answer) => {
+        if (answer.fileName) {
+            generateTeam(answer.fileName);
+        } else {
+            getFileName();
+        }
+    });
+};
+var generateTeam = (fileName) => {
+    var outputPath = path.join(OUTPUT_DIR, fileName + ".htmnl");
+
+    if (!fs.existsSync(OUTPUT_DIR)) {
+        fs.mkdirSync(OUTPUT_DIR);
+    }
+    fs.writeFileSync(outputPath, render(teamMembers), (err) => {
+        if (err) {
+            gitFileName();
+        }
+    });
+};
+
+startApp();
+
 
 // After you have your html, you're now ready to create an HTML file using the HTML
 // returned from the `render` function. Now write it to a file named `team.html` in the
