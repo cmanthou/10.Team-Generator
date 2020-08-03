@@ -16,24 +16,24 @@ const { fileURLToPath } = require("url");
 // and to create objects for each team member (using the correct classes as blueprints!)
 
 let teamMembers = [];
-var question = {
+var firstQuestion = {
     type: "list",
     message: "Add a team memeber or generate a new team?",
     name: "Add",
     choices: ["Add Member", "Generate Team"],
 };
-var role = {
+var questionsYourRole = {
     type: "list",
     message: "What role would you like to add?",
-    name: "Role",
+    name: "role",
     choices: ["Intern", "Engineer", "Manager"],
 };
-var file = {
+var fileNameQuestion = {
     type: "input",
     message: "Please enter file name",
-    name: "File",
+    name: "fileName",
 };
-var roleQuestions = {
+var Questions = {
     Manager: [
         {
             type: "input",
@@ -53,7 +53,7 @@ var roleQuestions = {
         {
             type: "input",
             message: "What is your Office Number?",
-            name: "number",
+            name: "officeNumber",
         },
     ],
     Engineer: [
@@ -75,7 +75,7 @@ var roleQuestions = {
         {
             type: "input",
             message: "What is your GitHub User Name?",
-            name: "gitHub",
+            name: "githubUserName",
         },
     ],
     Intern: [
@@ -110,7 +110,7 @@ var startApp = () => {
     selectRole();
 };
 var addOrFinish = () => {
-    inquirer.prompt(question).then((answer) => {
+    inquirer.prompt(firstQuestion).then((answer) => {
         if (answer.Add === "Add Member") {
             selectRole();
         } else {
@@ -119,16 +119,16 @@ var addOrFinish = () => {
     });
 };
 var selectRole = () => {
-    inquirer.prompt(role).then((answer) => {
+    inquirer.prompt(questionsYourRole).then((answer) => {
         console.log(answer);
-        questionsRole(role);
+        roleQuestions(Questions[answer.role], answer.role);
     });
 };
-var questionsRole = (questions) => {
+var roleQuestions = (questions, role) => {
     inquirer.prompt(questions).then((answer) => {
         console.log(answer);
         let member = {};
-        if (answer.role === "Manager") {
+        if (role === "Manager") {
             member = new Manager(
                 answer.name,
                 answer.id,
@@ -164,7 +164,7 @@ var getFileName = () => {
     });
 };
 var generateTeam = (fileName) => {
-    var outputPath = path.join(OUTPUT_DIR, fileName + ".htmnl");
+    var outputPath = path.join(OUTPUT_DIR, fileName + ".html");
 
     if (!fs.existsSync(OUTPUT_DIR)) {
         fs.mkdirSync(OUTPUT_DIR);
