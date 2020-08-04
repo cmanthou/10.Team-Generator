@@ -133,14 +133,14 @@ var roleQuestions = (questions, role) => {
                 answer.name,
                 answer.id,
                 answer.email,
-                answer.number
+                answer.officeNumber,
             );
         } else if (role === "Engineer") {
             member = new Engineer(
                 answer.name,
                 answer.id,
                 answer.email,
-                answer.gitHub,
+                answer.gitHubUserName,
             );
         } else if (role === "Intern") {
             member = new Intern(
