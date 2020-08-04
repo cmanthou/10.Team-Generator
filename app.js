@@ -171,7 +171,7 @@ var generateTeam = (fileName) => {
     }
     fs.writeFileSync(outputPath, render(teamMembers), (err) => {
         if (err) {
-            gitFileName();
+            getFileName();
         }
     });
 };
