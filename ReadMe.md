@@ -33,7 +33,3 @@
   ## QUESTIONS
   Email for Questions:
   Cory Manthou - Cory.Manthou@gmail.com
-  
-  Link to Video: https://drive.google.com/file/d/1V9BBh2BA07iqI1rqLVgGzoy2eZnbmrM2/view
-  
-
