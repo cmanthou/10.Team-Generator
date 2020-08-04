@@ -75,7 +75,7 @@ var Questions = {
         {
             type: "input",
             message: "What is your GitHub User Name?",
-            name: "githubUserName",
+            name: "gitHubUserName",
         },
     ],
     Intern: [
